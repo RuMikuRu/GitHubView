@@ -41,7 +41,7 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.squareup.picasso:picasso:2.4.0'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
-    //implementation "io.reactivex.rxjava3:rxjava:3.x.y"
+    implementation "io.reactivex.rxjava3:rxjava:3.1.0"
     //implementation 'com.squareup.okhttp3:4.9.1'
     //implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
 }

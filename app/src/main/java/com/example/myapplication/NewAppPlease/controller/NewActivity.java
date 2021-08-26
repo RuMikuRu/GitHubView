@@ -12,14 +12,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuItemImpl;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuItemCompat;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.myapplication.NewAppPlease.ItemAdapter;
+import com.example.myapplication.NewAppPlease.RxSearchObservable;
 import com.example.myapplication.NewAppPlease.api.Client;
 import com.example.myapplication.NewAppPlease.api.Service;
 import com.example.myapplication.NewAppPlease.model.Item;
@@ -27,8 +27,17 @@ import com.example.myapplication.NewAppPlease.model.ItemResponce;
 import com.example.myapplication.R;
 
 import java.util.List;
-import java.util.Observable;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableEmitter;
+import io.reactivex.rxjava3.core.ObservableOnSubscribe;
+import io.reactivex.rxjava3.core.ObservableSource;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.functions.Predicate;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,10 +45,8 @@ import retrofit2.Response;
 public class NewActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     TextView Disconnected;
-    private Item item;
     ProgressDialog pd;
     private SwipeRefreshLayout swipeContainer;
-    //private String RepoName;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,12 +79,6 @@ public class NewActivity extends AppCompatActivity {
         //loadJSON();
     }
     private void loadJSON(String RepoName){
-        if(RepoName.equals(""))
-        {
-            Disconnected = (TextView) findViewById(R.id.disconnected);
-        }
-        else
-        {
             try {
                 Client client = new Client();
                 Service apiService =
@@ -86,12 +87,18 @@ public class NewActivity extends AppCompatActivity {
                 call.enqueue(new Callback<ItemResponce>() {
                     @Override
                     public void onResponse(@NonNull Call<ItemResponce> call, @NonNull Response<ItemResponce> response) {
-                        assert response.body() != null;
-                        List<Item> items = response.body().getItems();
-                        recyclerView.setAdapter(new ItemAdapter(getApplicationContext(), items));
-                        recyclerView.smoothScrollToPosition(0);
-                        swipeContainer.setRefreshing(false);
-                        pd.hide();
+                        if(response.body() != null)
+                        {
+                            List<Item> items = response.body().getItems();
+                            recyclerView.setAdapter(new ItemAdapter(getApplicationContext(), items));
+                            recyclerView.smoothScrollToPosition(0);
+                            swipeContainer.setRefreshing(false);
+                            pd.hide();
+                        }
+                        else
+                        {
+                            Toast.makeText(NewActivity.this,"Нет такого репозитория", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -106,7 +113,6 @@ public class NewActivity extends AppCompatActivity {
                 Log.d("Erro", e.getMessage());
                 Toast.makeText(this, e.toString(),Toast.LENGTH_SHORT).show();
             }
-        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -114,27 +120,27 @@ public class NewActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main, menu);
         MenuItem menuItem = menu.findItem(R.id.app_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if(s.toString().equals(""))
-                {
-
-                }
-                else{
-                  loadJSON(s.toString());
-                }
-                return false;
-            }
-        });
-
+        RxSearchObservable.fromView(searchView).debounce(300, TimeUnit.MILLISECONDS)
+                .filter(new Predicate<String>() {
+                    @Override
+                    public boolean test(String s) throws Throwable {
+                        return !s.isEmpty();
+                    }
+                })
+                .distinctUntilChanged()
+                .switchMap(new Function<String, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<String> apply(String s) throws Throwable {
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Throwable {
+                        loadJSON(s);
+                    }
+                });
         return  true;
     }
-    //TODO Добавить поиск
 }
