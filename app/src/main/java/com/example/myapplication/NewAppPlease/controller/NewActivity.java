@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuItemImpl;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -24,6 +27,7 @@ import com.example.myapplication.NewAppPlease.model.ItemResponce;
 import com.example.myapplication.R;
 
 import java.util.List;
+import java.util.Observable;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +39,8 @@ public class NewActivity extends AppCompatActivity {
     private Item item;
     ProgressDialog pd;
     private SwipeRefreshLayout swipeContainer;
+    //private String RepoName;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -47,7 +53,7 @@ public class NewActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadJSON();
+                //loadJSON();
                 Toast.makeText(NewActivity.this,"Github Repositories Refresh", Toast.LENGTH_SHORT).show();
             }
         });
@@ -62,37 +68,44 @@ public class NewActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.smoothScrollToPosition(0);
-        loadJSON();
+        pd.hide();
+        //loadJSON();
     }
-    private void loadJSON(){
-        Disconnected = (TextView) findViewById(R.id.disconnected);
-        try {
-            Client client = new Client();
-            Service apiService =
-                    Client.getClient().create(Service.class);
-            Call<ItemResponce> call = apiService.getItems("bootstrap");
-            call.enqueue(new Callback<ItemResponce>() {
-                @Override
-                public void onResponse(@NonNull Call<ItemResponce> call, @NonNull Response<ItemResponce> response) {
-                    assert response.body() != null;
-                    List<Item> items = response.body().getItems();
-                    recyclerView.setAdapter(new ItemAdapter(getApplicationContext(), items));
-                    recyclerView.smoothScrollToPosition(0);
-                    swipeContainer.setRefreshing(false);
-                    pd.hide();
-                }
+    private void loadJSON(String RepoName){
+        if(RepoName.equals(""))
+        {
+            Disconnected = (TextView) findViewById(R.id.disconnected);
+        }
+        else
+        {
+            try {
+                Client client = new Client();
+                Service apiService =
+                        Client.getClient().create(Service.class);
+                Call<ItemResponce> call = apiService.getItems(RepoName);
+                call.enqueue(new Callback<ItemResponce>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ItemResponce> call, @NonNull Response<ItemResponce> response) {
+                        assert response.body() != null;
+                        List<Item> items = response.body().getItems();
+                        recyclerView.setAdapter(new ItemAdapter(getApplicationContext(), items));
+                        recyclerView.smoothScrollToPosition(0);
+                        swipeContainer.setRefreshing(false);
+                        pd.hide();
+                    }
 
-                @Override
-                public void onFailure(@NonNull Call<ItemResponce> call, Throwable t) {
-                    Log.d("Error", t.getMessage());
-                    Toast.makeText(NewActivity.this,"Erro Fetshining Data", Toast.LENGTH_SHORT).show();
-                    Disconnected.setVisibility(View.VISIBLE);
-                    pd.hide();
-                }
-            });
-        }catch (Exception e){
-            Log.d("Erro", e.getMessage());
-            Toast.makeText(this, e.toString(),Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onFailure(@NonNull Call<ItemResponce> call, Throwable t) {
+                        Log.d("Error", t.getMessage());
+                        Toast.makeText(NewActivity.this,"Erro Fetshining Data", Toast.LENGTH_SHORT).show();
+                        Disconnected.setVisibility(View.VISIBLE);
+                        pd.hide();
+                    }
+                });
+            }catch (Exception e){
+                Log.d("Erro", e.getMessage());
+                Toast.makeText(this, e.toString(),Toast.LENGTH_SHORT).show();
+            }
         }
     }
     @Override
@@ -100,7 +113,27 @@ public class NewActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         MenuItem menuItem = menu.findItem(R.id.app_search);
-        //menuItem.setIntent(createShareForcastIntent());
+        SearchView searchView = (SearchView) menuItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if(s.toString().equals(""))
+                {
+
+                }
+                else{
+                  loadJSON(s.toString());
+                }
+                return false;
+            }
+        });
+
         return  true;
     }
     //TODO Добавить поиск
