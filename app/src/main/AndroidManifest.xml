@@ -10,13 +10,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".NewApp.NewActivity"
+            android:name=".NewAppPlease.controller.NewActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".NewAppPlease.controller.DetailActivity"
+            android:parentActivityName=".NewAppPlease.controller.NewActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NewAppPlease.controller.NewActivity"/>
+        </activity>
+        <activity android:name=".NewAppPlease.controller.IssueActivity"
+            android:parentActivityName=".NewAppPlease.controller.DetailActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NewAppPlease.controller.DetailActivity"
+                />
         </activity>
     </application>
 

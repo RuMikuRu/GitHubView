@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipeContainer"
+    android:id="@+id/swipeContainerIssue"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
-    tools:context=".NewAppPlease.controller.NewActivity">
+    tools:context=".NewAppPlease.controller.IssueActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewIssue"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:addStatesFromChildren="false"
         android:backgroundTint="#f2f2f2"
 
-        tools:context=".NewAppPlease.controller.NewActivity"></androidx.recyclerview.widget.RecyclerView>
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/disconnected"
-    android:text="@string/internet"
-    android:textStyle="bold"
-    android:textSize="30sp"
-    />
+        tools:context=".NewAppPlease.controller.IssueActivity"></androidx.recyclerview.widget.RecyclerView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/disconnected"
+        android:text="@string/internet"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

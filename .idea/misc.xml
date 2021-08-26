@@ -3,10 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.290625" />
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/drawable/ic_launcher_background.xml" value="0.290625" />
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.290625" />
         <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/drawable/transparent_gfx.xml" value="0.159375" />
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/layout-v23/row_issue.xml" value="0.27447916666666666" />
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/layout/activity_detail.xml" value="0.27447916666666666" />
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/layout/activity_issue.xml" value="0.27447916666666666" />
         <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/layout/list_item.xml" value="0.1793478260869565" />
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/layout/row_issue.xml" value="0.27447916666666666" />
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/layout/row_repository.xml" value="0.27447916666666666" />
         <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/layout/search_item.xml" value="0.14375" />
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/layout/view_issue.xml" value="0.27447916666666666" />
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/menu/detail.xml" value="0.27447916666666666" />
+        <entry key="..\:/MyPrograms/AndroidProgram/MyApplication/app/src/main/res/menu/main.xml" value="0.27447916666666666" />
       </map>
     </option>
   </component>
