@@ -1,5 +1,7 @@
 package com.example.myapplication.NewAppPlease.controller;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -128,17 +131,16 @@ public class NewActivity extends AppCompatActivity {
                     }
                 })
                 .distinctUntilChanged()
-                .switchMap(new Function<String, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<String> apply(String s) throws Throwable {
-                        return null;
-                    }
-                })
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Throwable {
                         loadJSON(s);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Throwable {
+                        Log.e(TAG, throwable.getMessage(), throwable);
                     }
                 });
         return  true;

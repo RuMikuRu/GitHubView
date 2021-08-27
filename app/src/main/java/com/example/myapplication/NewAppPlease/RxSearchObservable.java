@@ -3,6 +3,7 @@ package com.example.myapplication.NewAppPlease;
 import androidx.appcompat.widget.SearchView;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class RxSearchObservable {
@@ -11,14 +12,14 @@ public class RxSearchObservable {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                subject.onComplete();
-                return true;
+                subject.onNext(query);
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String text) {
                 subject.onNext(text);
-                return true;
+                return false;
             }
         });
         return subject;
